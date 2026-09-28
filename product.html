@@ -1,0 +1,8 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Product - RentX</title><link rel="stylesheet" href="style.css"></head><body>
+<nav><a class="logo" href="/">RentX</a><a href="/">← Products</a></nav><main class="details" id="details"></main>
+<script>
+const id=new URLSearchParams(location.search).get('id');
+fetch('/api/products/'+id).then(r=>r.json()).then(p=>{
+document.getElementById('details').innerHTML=`<img src="${p.imageUrl}" alt="${p.name}"><div><span class="pill">${p.category}</span><h1>${p.name}</h1><h3>${p.brand}</h3><p>${p.description}</p><h2>₹${p.pricePerDay} <small>/ day</small></h2><p>Security deposit: ₹${p.securityDeposit}</p>${p.available?`<button class="btn" onclick="location.href='rent.html?id=${p.id}'">Rent Now</button>`:'<button disabled>Currently unavailable</button>'}</div>`;
+});
+</script></body></html>

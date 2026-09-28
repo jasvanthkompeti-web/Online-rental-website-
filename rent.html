@@ -1,0 +1,14 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Book Rental - RentX</title><link rel="stylesheet" href="style.css"></head><body>
+<nav><a class="logo" href="/">RentX</a><a href="/">Cancel</a></nav><main class="form-card"><h1>Book your rental</h1><form id="form">
+<input id="name" placeholder="Full name" required><input id="email" type="email" placeholder="Email" required>
+<label>Start date</label><input id="start" type="date" required><label>End date</label><input id="end" type="date" required>
+<div id="price"></div><button class="btn">Confirm Rental</button></form><p id="msg"></p></main>
+<script>
+const id=new URLSearchParams(location.search).get('id'); let product;
+fetch('/api/products/'+id).then(r=>r.json()).then(p=>product=p);
+const price=()=>{let a=new Date(start.value),b=new Date(end.value),d=Math.ceil((b-a)/86400000); document.getElementById('price').textContent=d>0?'Estimated rental: ₹'+(d*product.pricePerDay):''};
+start.onchange=end.onchange=()=>product&&price();
+form.onsubmit=async e=>{e.preventDefault();const body={productId:+id,customerName:name.value,customerEmail:email.value,startDate:start.value,endDate:end.value};
+const r=await fetch('/api/rentals',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await r.json().catch(()=>({}));
+msg.textContent=r.ok?'Rental booked successfully! Booking ID: '+data.id:'Booking failed: '+(data.message||'Check your dates');};
+</script></body></html>
